@@ -174,7 +174,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, handleLogout }) => {
                   No expenses recorded for this month
                 </div>
               ) : (
-                <div className="space-y-3 max-h-[600px] overflow-y-auto">
+                <div className="space-y-3 max-h-150 overflow-y-auto">
                   {expenses.map((expense) => (
                     <div
                       key={expense._id}
