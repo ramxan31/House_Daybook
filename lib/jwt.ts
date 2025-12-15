@@ -1,7 +1,10 @@
-import jwt from 'jsonwebtoken';
+import jwt, { Secret } from "jsonwebtoken";
+import type { StringValue } from "ms";
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+const JWT_SECRET: Secret = process.env.JWT_SECRET ?? "fallback-secret-key";
+
+const JWT_EXPIRES_IN: number | StringValue =
+  (process.env.JWT_EXPIRES_IN as StringValue) ?? "7d";
 
 export interface JWTPayload {
   userId: string;
@@ -17,7 +20,7 @@ export function signToken(payload: JWTPayload): string {
 export function verifyToken(token: string): JWTPayload {
   try {
     return jwt.verify(token, JWT_SECRET) as JWTPayload;
-  } catch (error) {
-    throw new Error('Invalid or expired token');
+  } catch {
+    throw new Error("Invalid or expired token");
   }
 }

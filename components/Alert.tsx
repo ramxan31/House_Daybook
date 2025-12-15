@@ -1,4 +1,5 @@
 "use client";
+
 import { AlertCircle, AlertTriangle, CheckCircle, Info, X } from "lucide-react";
 import {
   createContext,
@@ -29,26 +30,33 @@ const AlertContext = createContext<AlertContextType | undefined>(undefined);
 
 // Alert Provider Component
 export const AlertProvider = ({ children }: { children: ReactNode }) => {
-  const [alerts, setAlerts] = useState([]);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
 
-  const alert = useCallback((message: string, type = "info", seconds = 5) => {
-    const id = Date.now() + Math.random();
-    const newAlert = { id, type, message };
-
-    setAlerts((prev) => [...prev, newAlert]);
-
-    if (seconds > 0) {
-      setTimeout(() => {
-        removeAlert(id);
-      }, seconds * 1000);
-    }
-
-    return id;
-  }, []);
-
-  const removeAlert = useCallback((id) => {
+  const removeAlert = useCallback((id: number) => {
     setAlerts((prev) => prev.filter((alert) => alert.id !== id));
   }, []);
+
+  const alert = useCallback(
+    (
+      message: string,
+      type: "success" | "error" | "warning" | "info" = "info",
+      seconds = 5
+    ) => {
+      const id = Date.now() + Math.random();
+      const newAlert: Alert = { id, type, message };
+
+      setAlerts((prev) => [...prev, newAlert]);
+
+      if (seconds > 0) {
+        setTimeout(() => {
+          removeAlert(id);
+        }, seconds * 1000);
+      }
+
+      return id;
+    },
+    [removeAlert]
+  );
 
   return (
     <AlertContext.Provider value={{ alert, removeAlert }}>

@@ -12,12 +12,16 @@ import { ExpenseType, UpdateExpenseInput } from "@/types/expense";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
 
-    const { id } = await params;
+    const { id } = await context.params; // ✅ REQUIRED here
+
+    if (!id) {
+      throw new ApiError("Missing ID", 400);
+    }
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new ApiError(
@@ -54,12 +58,17 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
 
-    const { id } = await params;
+    const { id } = await context.params; // ✅ REQUIRED here
+
+    if (!id) {
+      throw new ApiError("Missing ID", 400);
+    }
+
     const body: UpdateExpenseInput = await request.json();
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -115,12 +124,16 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
 
-    const { id } = await params;
+    const { id } = await context.params; // ✅ REQUIRED here
+
+    if (!id) {
+      throw new ApiError("Missing ID", 400);
+    }
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new ApiError(

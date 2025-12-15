@@ -55,14 +55,11 @@ const Stats: React.FC<StatsProps> = ({ stats, expenses, selectedMonth }) => {
             <p className="text-base sm:text-3xl font-bold text-gray-800">
               Rs.{" "}
               {expenses?.length > 0
-                ? (
-                    stats?.total /
-                    new Date(
-                      selectedMonth?.split("-")[0],
-                      selectedMonth?.split("-")[1],
-                      0
-                    ).getDate()
-                  ).toFixed(2)
+                ? (() => {
+                    const [year, month] = selectedMonth.split("-").map(Number);
+                    const daysInMonth = new Date(year, month, 0).getDate();
+                    return (stats?.total / daysInMonth).toFixed(2);
+                  })()
                 : "0.00"}
             </p>
           </div>
